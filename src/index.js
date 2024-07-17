@@ -46,6 +46,7 @@ const app = express();
   try {
     await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
 
+    This line attaches an event listener to the Express application instance app
     app.on("error", (error) => {
       console.log("ERROR", error)
       throw error

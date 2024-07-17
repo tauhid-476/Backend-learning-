@@ -1,6 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors"
+//Cookies are small pieces of data that are stored on a user's device (computer, smartphone, etc.) by a web browser while browsing a website
+// Parsing is the process of analyzing structured data according to a defined syntax or grammar, typically to extract meaningful information or to transform it into a usable format.
 
 const app = express();
 

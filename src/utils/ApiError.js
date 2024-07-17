@@ -9,6 +9,7 @@ class ApiError extends Error {
     errors = [],
     stack = ""
   ) {
+    //inherit the parent and overwrite the properties
     super(message)
     this.statusCode = statusCode
     this.data = null
@@ -16,7 +17,7 @@ class ApiError extends Error {
     this.success = false
     this.errors = errors
 
-    //where actually is error
+    //to get the track of where actually is error
     if (stack) {
       this.stack = stack
 
