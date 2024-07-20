@@ -1,6 +1,6 @@
 import mongoose,{ Schema } from "mongoose"
 import jwt from "jsonwebtoken"
-import bcryt from "bcrypt"
+import bcryt from "bcrypt"//to hash password
 //encrypt ===> to change information into secret code
 
 const userSchema = new Schema({
@@ -53,7 +53,7 @@ const userSchema = new Schema({
 //select event ("validate","save","remove","updateone","deleteone")
 //seconf , callback .Dont use arrow fn cuz it doenst know the context of data on userSchem
 //async fn cuz its complex and take time
-//
+//data save hone ke pehle ye kardo
 userSchema.pre("save", async function(next){
   if(!this.isModified("password")) return next()
 
@@ -78,6 +78,7 @@ userSchema.methods.generateAccessToken = function(){
   return jwt.sign(
     {
 //    payload key : coming from db
+//     we get this id from mogodb
       _id: this._id,
       email: this.email,
       username: this.username,

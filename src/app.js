@@ -1,8 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors"
-//Cookies are small pieces of data that are stored on a user's device (computer, smartphone, etc.) by a web browser while browsing a website
-// Parsing is the process of analyzing structured data according to a defined syntax or grammar, typically to extract meaningful information or to transform it into a usable format.
+
 
 const app = express();
 
@@ -18,6 +17,9 @@ app.use(cors({
 }))
 
 app.use(express.json({limit:"16kb"}))
+
+//configuring the middleware to parse incoming JSON payloads with a size limit of 16 kilobytes.
+// payload" refers to the data that is sent in the body of an HTTP request or response
 
 //data coming from url
 app.use(express.urlencoded({extended:true,limit:"16kb"}))
