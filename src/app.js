@@ -30,4 +30,14 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 
+//bringing routes
+import userRouter from './routes/user.routes.js'
+
+//routes declaration
+
+app.use("/api/v1/users",userRouter)
+// route name and konsa route call karna
+
+// https:localhost:8000/users/register
+
 export { app }

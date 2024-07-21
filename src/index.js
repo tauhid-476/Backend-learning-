@@ -1,23 +1,20 @@
 // require('dotenv').config({path: './env'})
 import dotenv from "dotenv"
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
 
 dotenv.config({
   path: './env'
 })
 
-const port = process.env.PORT || 8000;
+
 //async function returns a promise
 connectDB()
   .then(() => {
 //our application mongo db ka use karke listen karna start nahi kiya tha jo ki ab hoga
-    app.on("error", (error) => {
-      console.log("ERROR", error)
-      throw error
-    })
-
-    app.listen(port, () => {
-      console.log(`App is listening at port : ${port}`);
+   
+    app.listen(process.env.PORT || 8000, () => {
+      console.log(`App is listening at port : ${process.env.PORT || 8000} `);
     })
   })
   .catch((err) => {

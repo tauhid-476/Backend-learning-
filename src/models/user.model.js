@@ -57,7 +57,7 @@ const userSchema = new Schema({
 userSchema.pre("save", async function(next){
   if(!this.isModified("password")) return next()
 
-  this.password = bcryt.hash(this.password, 10)
+  this.password = await bcryt.hash(this.password, 10)
   next()
     //this will create problem it will encrypt pass everytime even if a user do something with avatar etc.
     //this thing shoud only run when there is modificatio in password
@@ -106,5 +106,5 @@ userSchema.methods.generateRefreshToken = function(){
     }
   )
 }
-
+//this user can contact db directly cuz it is made thru mongoose
 export const User = mongoose.model("User",userSchema)
