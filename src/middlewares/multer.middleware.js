@@ -5,7 +5,7 @@ import multer from "multer";
 //cb: The callback function used to specify the storage location. It takes two arguments: an error (if any) and the destination path. Here, it sets the destination to /public/temp.
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '/public/temp')
+    cb(null, './public/temp')
   },
   filename: function (req, file, cb) {
 

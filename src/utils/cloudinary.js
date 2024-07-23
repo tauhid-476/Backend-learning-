@@ -1,5 +1,6 @@
 //very usable code can be use in many projects
 import { v2 as cloudinary } from 'cloudinary';
+import { response } from 'express';
 import fs from "fs"
 
 
@@ -20,13 +21,17 @@ const uploadOnCloudinary = async (localFilePath)=>{
 
     //upload file on cloudinary
   
-    const respone = await cloudinary.uploader.upload(localFilePath,{
+    const response = await cloudinary.uploader.
+    upload(localFilePath,{
       resource_type:"auto"
     })
-    console.log("File is beem uploaded successfully",respone.url);
-    return respone
+    // console.log("File is beem uploaded successfully",response.url);
+    fs.unlinkSync(localFilePath)
+    //unlick after been successfully uploaded
+    return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath)//remove the locally saved temp file as upload opern got failed
+    fs.unlinkSync(localFilePath)
+    //remove the locally saved temp file as upload opern got failed
     return null
   }
 
