@@ -1,9 +1,9 @@
 //will only verify if user is there or not
 
-import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/asyncHandler";
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken"
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 
 export const verifyJWT = asyncHandler(async(req, res, next)=>{
 
@@ -11,6 +11,7 @@ export const verifyJWT = asyncHandler(async(req, res, next)=>{
     // to logout we will check thru tokens
     //sinnce we created cookies in user controller we will take it from there
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ","")
+    //also why only access token here why not refresh token? next vid
   
     //user can send the token thru header section of postman where it is send in the format of 
     //Authorization : "Bearer <tokenString>"
@@ -24,7 +25,7 @@ export const verifyJWT = asyncHandler(async(req, res, next)=>{
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
   
     const user = await User.findById(decodedToken?._id).select(
-      " -password -refreshToken"
+      "-password -refreshToken"
     )
     if(!user){
       //Discuss about frontend

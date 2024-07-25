@@ -1,7 +1,7 @@
 import {Router} from "express";
-import { loginUser, logoutUser, registerUser } from "../controllers/user.controller.js";
+import { loginUser, logoutUser, refreshAccessToken, registerUser } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
-import {user, verifyJWT} from "../middlewares/auth.middleware.js"
+import { verifyJWT} from "../middlewares/auth.middleware.js"
 
 const router = Router()
 
@@ -25,9 +25,14 @@ router.route("/register").post(
 router.route("/login").post(loginUser)
 
 //the use of next
+//secured router
+//Secured routes in a backend application are essential to protect sensitive data and ensure that only authorized users can access certain resources
 router.route("/logout").post(verifyJWT, logoutUser)
+router.route("/refreshToken").post(refreshAccessToken)
 
-  //router.route("/path").action(injectMiddleware,fn)
+
+
+//router.route("/path").action(injectMiddlewares(if any),fn)
 
 
 export default router
