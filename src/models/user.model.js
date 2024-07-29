@@ -51,7 +51,7 @@ const userSchema = new Schema({
 
 //imp points
 //select event ("validate","save","remove","updateone","deleteone")
-//seconf , callback .Dont use arrow fn cuz it doenst know the context of data on userSchem
+//second , callback .Dont use arrow fn cuz it doenst know the context of data on userSchem
 //async fn cuz its complex and take time
 //data save hone ke pehle ye kardo
 userSchema.pre("save", async function(next){

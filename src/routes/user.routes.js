@@ -5,6 +5,9 @@ import { verifyJWT} from "../middlewares/auth.middleware.js"
 
 const router = Router()
 
+
+//router.route("/path").action(injectMiddlewares(if any),fn)
+
 //since ise call kiya he will say konse route pe konsa fn perform karna hai
 router.route("/register").post(
   upload.fields([
@@ -32,7 +35,6 @@ router.route("/refreshToken").post(refreshAccessToken)
 
 
 
-//router.route("/path").action(injectMiddlewares(if any),fn)
 
 
 export default router

@@ -18,6 +18,7 @@ class ApiError extends Error {
     this.errors = errors
 
     //to get the track of where actually is error
+    //optional.Mainly in production grade
     if (stack) {
       this.stack = stack
 

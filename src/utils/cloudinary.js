@@ -28,6 +28,7 @@ const uploadOnCloudinary = async (localFilePath)=>{
     // console.log("File is beem uploaded successfully",response.url);
     fs.unlinkSync(localFilePath)
     //unlick after been successfully uploaded
+    //warna server mai save hote rahegi
     return response;
   } catch (error) {
     fs.unlinkSync(localFilePath)
