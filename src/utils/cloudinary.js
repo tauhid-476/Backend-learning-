@@ -26,9 +26,13 @@ const uploadOnCloudinary = async (localFilePath)=>{
       resource_type:"auto"
     })
     // console.log("File is beem uploaded successfully",response.url);
+
+
     fs.unlinkSync(localFilePath)
     //unlick after been successfully uploaded
     //warna server mai save hote rahegi
+
+
     return response;
   } catch (error) {
     fs.unlinkSync(localFilePath)
@@ -38,4 +42,22 @@ const uploadOnCloudinary = async (localFilePath)=>{
 
 }
 
-export {uploadOnCloudinary}
+
+
+const deleteFromCloudinary = async (imageUrl) => {
+  const publicId = imageUrl.split('/').pop().split('.')[0];
+   // Extract the public ID from the URL
+
+  try {
+    await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.error("Error deleting image from Cloudinary:", error);
+    throw new ApiError(500, "Error deleting old avatar image");
+  }
+};
+
+
+export {
+  uploadOnCloudinary,
+  deleteFromCloudinary
+}
