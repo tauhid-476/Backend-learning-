@@ -480,6 +480,96 @@ const updateUserCoverImage = asyncHandler(async(req, res)=>{
     )
 })
 
+//
+const getUserChannelProfile = asyncHandler(async(req,res)=>{
+  
+  //channel's info get accesss when we hit its url
+  const {username} = req.params
+  if(!username?.trim()){
+    throw new ApiError(400,"Username not present")
+  }
+
+  // User.find({username})
+  //no need to do this since we have match method in aggregation pipelinr
+  const channel = await User.aggregate([
+
+        {
+          $match: {
+            username: username?.toLowerCase()
+          }
+        },
+        {
+          //user's subscribers
+          
+          $lookup: {
+            from: "subscriptions",
+            //since we are writting aggregatipn piepline , all the field in database are converted into lowwercase and plural
+            localField: "_id",
+            foreignField: "channel",
+            as: "subscribers"
+          }
+        },
+        {
+          //user's subscribed to
+          $lookup: {
+            from: "subscriptions",   
+            localField: "_id",
+            foreignField: "subscriber",
+            as: "subscribedTo"
+
+          }
+        },
+        {
+          
+          //adding  more field to user object
+          $addFields: {
+            //basically counting all the document to get subscirbers count and subscirbed to
+            subscribersCount: {
+              $size: "$subscribers"
+            },
+            subscribedToCount: {
+             $size: "$subscribedTo"
+            },
+            isSubscribed: {
+              //check if in the subscibers document user is present or not . If yes display subscribed else no
+               $cond: {
+                ///$in check both in arrays and objevts , first it taks
+                if: {$in : [req.user?._id,"$subscribers.subscriber"]},
+                then: true,
+                else: false
+               }
+            }
+          }
+        },
+        {
+           //selected things only for further  operatio
+          $project: {
+            //assign all the field the valeu of 1 whichever u want to passs
+            fullName: 1,
+            username: 1,
+            subscribersCount: 1,
+            subscribedToCount: 1,
+            isSubscribed: 1,
+            avatar: 1,
+            coverImage: 1,
+            email: 1,
+          }
+        }
+
+  ])
+
+  if (!channel?.length) {
+    throw new ApiError(404,"Channel doesnt exist")
+  }
+  //This condition is true if channel is null, undefined, or an empty array (or string, depending on the context).
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(200, channel[0],"User channel fetched successfully")
+  )
+})
+
 
 
 export { 
@@ -491,5 +581,6 @@ export {
   getCurrentUser,
   updateAccountDetails,
   updateUserAvatar,
-  updateUserCoverImage
+  updateUserCoverImage,
+  getUserChannelProfile
 }
