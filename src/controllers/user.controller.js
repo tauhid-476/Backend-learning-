@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import {User} from "../models/user.model.js"
 import {uploadOnCloudinary,deleteFromCloudinary} from "../utils/cloudinary.js"
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose";
 
 // asyncHandler: This utility wraps the async function, automatically catching any errors that might occur and passing them to the next middleware. This is typically used to avoid repetitive try-catch blocks in each route handler.
 
@@ -500,10 +501,12 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
         },
         {
           //user's subscribers
+          //susbcribers ke liye channel ka doc
           
           $lookup: {
             from: "subscriptions",
-            //since we are writting aggregatipn piepline , all the field in database are converted into lowwercase and plural
+            //since we are writting aggregatipn piepline , all the field in database are converted 
+            //into lowwercase and plural
             localField: "_id",
             foreignField: "channel",
             as: "subscribers"
@@ -511,6 +514,7 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
         },
         {
           //user's subscribed to
+          //subscribed  ke liye same user(subscriber) ka doc
           $lookup: {
             from: "subscriptions",   
             localField: "_id",
@@ -533,7 +537,7 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
             isSubscribed: {
               //check if in the subscibers document user is present or not . If yes display subscribed else no
                $cond: {
-                ///$in check both in arrays and objevts , first it taks
+              //$in check both in arrays and objevts , first it taks
                 if: {$in : [req.user?._id,"$subscribers.subscriber"]},
                 then: true,
                 else: false
@@ -570,6 +574,63 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
   )
 })
 
+const getWatchHistory = asyncHandler(async(req,res)=>{
+
+  //req.user._id it gives a string in responsde not a unique id 
+  // when we use mongoose and use methods like findBy id , mongoose automatically converts it into a mongoDb id
+
+  const user = await User.aggregate([
+    {
+      $match: {
+      id: new mongoose.Types.ObjectId(req.user._id)
+      }
+    },
+    {
+      $lookup: {
+       from: "videos",
+       localField: "watchHistory",
+       foreignField: "_id",
+       as: "watchHistory",
+       pipeline:[
+            {
+              $lookup: {
+                from:"users",
+                localField: "owner",
+                foreignField:"_id",
+                as: "owner",
+                pipeline: [
+                  {
+                    $project: {
+                      fullName: 1,
+                      username: 1,
+                      avatar: 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              //The way we have written pipeliens it gives response in array at first position
+              //its not a good approach
+              //add a owner field here which
+              $addFields: {
+                owner: {
+                  $first: "$owner"
+                }
+              }
+            }
+       ]
+      }
+    }
+  ])
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(200,user[0].watchHistory,"Watch history fetched succesfully")
+  )
+})
+
 
 
 export { 
@@ -582,5 +643,6 @@ export {
   updateAccountDetails,
   updateUserAvatar,
   updateUserCoverImage,
-  getUserChannelProfile
+  getUserChannelProfile,
+  getWatchHistory
 }
