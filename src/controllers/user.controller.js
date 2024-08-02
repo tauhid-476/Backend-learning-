@@ -248,10 +248,19 @@ const logoutUser = asyncHandler(async(req, res)=>{
   {
     //what to update 
     //use mongodb operators
-    $set: {
-      refreshToken: undefined
+    // $set: {
+    //   refreshToken: undefined
+    // }
+    //better approach
+    //unset things . Assign the flag 1 to which u want to unset
+    $unset: {
+      refreshToken: 1
     }
 
+  },
+  {
+    new: true
+    //new: true: This option ensures that the modified document is returned.
   }
 )
 //token is gone from db now clear the cookies
@@ -351,7 +360,13 @@ const changeCurrentPassword = asyncHandler(async (req,res)=>{
 const getCurrentUser = asyncHandler(async(req,res)=>{
   return res
   .status(200)
-  .json(200, req.user, "Current user fetched successfully")
+  .json(
+    new ApiResponse(
+      200,
+      req.user,
+      "Current user fetched successfully"
+    )
+  )
 })
 
 
@@ -582,7 +597,7 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
   const user = await User.aggregate([
     {
       $match: {
-      id: new mongoose.Types.ObjectId(req.user._id)
+      _id: new mongoose.Types.ObjectId(req.user._id)
       }
     },
     {
@@ -591,6 +606,7 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
        localField: "watchHistory",
        foreignField: "_id",
        as: "watchHistory",
+       //i aint getting the user . add apipelien which will look from users and get me the data
        pipeline:[
             {
               $lookup: {
@@ -598,6 +614,7 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
                 localField: "owner",
                 foreignField:"_id",
                 as: "owner",
+                //add one more pipeline to get relevent data only
                 pipeline: [
                   {
                     $project: {
@@ -627,7 +644,10 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
   return res
   .status(200)
   .json(
-    new ApiResponse(200,user[0].watchHistory,"Watch history fetched succesfully")
+    new ApiResponse(
+      200,
+      user[0].watchHistory,
+      "Watch history fetched succesfully")
   )
 })
 
