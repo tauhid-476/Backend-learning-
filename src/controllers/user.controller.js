@@ -93,11 +93,11 @@ const registerUser = asyncHandler( async(req, res)=>{
   if(existedUser){
     throw new ApiError(409,"User already exists with following username or email")
   }
-
+//
   //4  
   //optional chaining to safely access the path of the first uploaded file.
   // console.log(req.files);
-  //it is an array of object containinf information about the image at index 0
+  //it is an array of object containinf information about the image , at index 0 we get its path
   const avatarLocalPath = req.files?.avatar[0]?.path;
   
   // const coverImageLocalPath = req.files?.coverImage[0]?.path

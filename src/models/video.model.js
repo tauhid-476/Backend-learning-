@@ -4,7 +4,7 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 //paginate==>manage and display large amounts of data in smaller, more manageable chunks, typically referred to as "pages." Instead of loading and displaying all the data at once, pagination allows users to view a subset of the data at a time,
 
 const videoSchema = new Schema({
-      videofile : {
+      videoFile : {
         type : String,//cloudinary url
         required : true,
       },
