@@ -8,9 +8,9 @@ import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    
 
-    
+
+
     const {
         page = 1,
         limit = 10,
@@ -42,8 +42,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
             $or: [
                 //regex is basically the input from user. eg. he want to search video of a "cat"
                 //options i is to ifnore case sensitivity
-                { title: { $regex: query , $options: "i"} },
-                { description: { $regex: query , $options: "i"} }
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
             ]
         })
     }
@@ -64,6 +64,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     //pipelines
     const aggregateQuery = [
         {
+            //$and is used to check if all the conditions are true
             $match: searchQuery.length > 0 ? { $and: searchQuery } : {}
         },
         {
@@ -117,7 +118,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const videos = await Video.aggregate(aggregateQuery)
         .skip((pageNumber - 1) * limitNumber)
         .limit(limitNumber)
-
+        //skips the number of documents based on the page number provided from the use
 
     return res
         .status(200)
@@ -423,6 +424,60 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 
 })
 
+const videoViews = asyncHandler(async (req, res) => {
+
+    const { videoId } = req.params
+    const userId = req.user?._id;
+    if (!isValidObjectId(videoId)) {
+        throw new ApiError(400, "invalid video id")
+    }
+
+
+    
+    const video = await Video.findById(videoId)
+
+    if(!video){
+        throw new ApiError(400,"Video not found ")
+    }
+
+    if (!Array.isArray(video.views)) {
+
+        video.views = []
+    }
+
+    if (userId && !video.views.includes(userId.toString())) {
+
+        video.views.push(userId);
+        await video.save()
+    }
+
+    const totalViews = video.views.length
+
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                totalViews
+            },
+            "Total views fetche successfully"
+        )
+    )
+
+
+
+
+    // try { } catch (error) {
+
+    //     throw new ApiError(400,"Something went wrong")
+
+    // }
+
+})
+
+
 export {
     getAllVideos,
     publishAVideo,
@@ -430,5 +485,6 @@ export {
     updateVideoTitleAndDescription,
     updateVideoThumbnail,
     deleteVideo,
-    togglePublishStatus
+    togglePublishStatus,
+    videoViews
 }

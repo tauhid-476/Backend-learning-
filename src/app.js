@@ -33,11 +33,13 @@ app.use(cookieParser())
 //bringing routes
 import userRouter from './routes/user.routes.js'
 import videoRouter from './routes/video.routes.js'
+import tweetRouter from './routes/tweet.routes.js'
 
 //routes declaration
 
 app.use("/api/v1/users",userRouter)
 app.use("/api/v1/video", videoRouter);
+app.use("/api/v1/tweet", tweetRouter);
 // route name and konsa route call karna/
 
 // https:localhost:8000/users/register
