@@ -37,6 +37,8 @@ import tweetRouter from './routes/tweet.routes.js'
 import subscriptionRouter from './routes/subscription.routes.js'
 import commentRouter from './routes/comment.routes.js'
 import healthcheckRouter from './routes/healthcheck.routes.js'
+import likeRouter from './routes/like.routes.js'
+
 
 //routes declaration
 
@@ -46,6 +48,7 @@ app.use("/api/v1/tweet", tweetRouter);
 app.use("/api/v1/subscription", subscriptionRouter);
 app.use("/api/v1/comment", commentRouter);
 app.use("/api/v1/healthcheck", healthcheckRouter);
+app.use("/api/v1/like", likeRouter);
 // route name and konsa route call karna/
 
 // https:localhost:8000/users/register
