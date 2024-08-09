@@ -2,7 +2,7 @@ import mongoose,{Schema} from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 //This is a Mongoose plugin that adds pagination functionality to Mongoose aggregation queries
 //paginate==>manage and display large amounts of data in smaller, more manageable chunks, typically referred to as "pages." Instead of loading and displaying all the data at once, pagination allows users to view a subset of the data at a time,
-
+//
 const videoSchema = new Schema({
       videoFile : {
         type : String,//cloudinary url

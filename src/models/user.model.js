@@ -48,7 +48,7 @@ const userSchema = new Schema({
           type : String
          }
 },{timestamps:true})
-
+//
 //imp points
 //select event ("validate","save","remove","updateone","deleteone")
 //second , callback .Dont use arrow fn cuz it doenst know the context of data on userSchem
